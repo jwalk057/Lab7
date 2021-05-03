@@ -17,14 +17,16 @@
 void ADC_init(){
 	ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADATE);
 }
-unsigned char ADCMAX = 0x5D;
-unsigned char ADCMIN = 0x11;
+const unsigned char ADCMAX = 0x5D;
+const unsigned char ADCMIN = 0x11;
+unsigned char ADCThresh = 0x00;
+
 unsigned char tmpB=0x00;
-unsigned char tmpD=0x00;
 unsigned short tmpADC=0x00;
 
 enum SM {Start, Go} sm;
 void Tick(){
+	ADCThresh = ADCMAX/8;
 	switch(sm){
 		case Start:
 			sm = Go;
@@ -34,23 +36,44 @@ void Tick(){
 	}
 	switch(sm){
 		case Start:
-			tmpB = tmpD = 0;
+			tmpB = 0;
 			PORTB = tmpB;
-			PORTD = tmpD;
 			break;
 		case Go:
 			tmpADC =ADC;
-			if(tmpADC >=ADCMAX/2){
+			if(tmpADC <= ADCMIN+1){
 				tmpB =0x01;
-				tmpD =0x00;
 				PORTB = tmpB;
-				PORTD = tmpD;
 			}
-			else{
-				tmpB = tmpD = 0x00;
+			else if(tmpADC <= ADCThresh*2){
+				tmpB = 0x03;
 				PORTB = tmpB;
-				PORTD = tmpD;
 			}
+			else if(tmpADC <= ADCThresh*3){
+                                tmpB = 0x07;
+                                PORTB = tmpB;
+                        }
+			else if(tmpADC <= ADCThresh*4){
+                                tmpB = 0x0F;
+                                PORTB = tmpB;
+                        }
+			else if(tmpADC <= ADCThresh*5){ 
+                                tmpB = 0x1F;
+                                PORTB = tmpB;
+                        }
+                        else if(tmpADC <= ADCThresh*6){
+                                tmpB = 0x3F;
+                                PORTB = tmpB;
+                        }
+                        else if(tmpADC <= ADCThresh*7){
+                                tmpB = 0x7F;
+                                PORTB = tmpB;
+                        }
+			else if(tmpADC >= ADCThresh*8){
+				tmpB = 0xFF;
+				PORTB = tmpB;
+			}
+
 			break;
 	}
 }
