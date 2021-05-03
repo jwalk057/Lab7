@@ -1,13 +1,13 @@
 /*	Author: lab
  *  Partner(s) Name: Jeremy Walker
  *	Lab Section:
- *	Assignment: Lab # 7 Exercise # 3
+ *	Assignment: Lab # 7 Exercise # 4
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  *
- *  Demo Link: https://youtu.be/JR5CR0zdAdk
+ *  Demo Link: https://youtu.be/6gNq814ScHg
  */
 #include <avr/io.h>
 #ifdef _SIMULATE_
@@ -17,8 +17,8 @@
 void ADC_init(){
 	ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADATE);
 }
-const unsigned char ADCMAX = 0x5D;
-const unsigned char ADCMIN = 0x11;
+const unsigned char ADCMAX = 0x5D; //93
+const unsigned char ADCMIN = 0x11; //17
 unsigned char ADCThresh = 0x00;
 
 unsigned char tmpB=0x00;
